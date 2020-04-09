@@ -1,5 +1,4 @@
 import socket
-import sys
 
 
 class Server:
@@ -28,6 +27,10 @@ class ResponseData:
     def __init__(self, data):
         self.tid = data[:2]
         self.flags = data[2:4]
+        self.qdcount = data[4:5]
+        self.ancount = data[5:6]
+        self.nscount = data[6:7]
+        self.arcount = data[7:8]
 
 
 def encode_bytes(*bytes_raw):
@@ -40,9 +43,14 @@ class Response:
     def __init__(self):
         self.tid = ''
         self.flags = ''
+        self.qdcount = ''
+        self.ancount = ''
+        self.nscount = ''
+        self.arcount = ''
 
     def __str__(self):
-        return f'tid: {self.tid}, flags: {self.flags}'
+        return f'tid: {self.tid}, flags: {self.flags}, qdcount: {self.qdcount}, ' \
+               f'ancount: {self.ancount}, nscount: {self.nscount}, arcount: {self.arcount}'
 
     def build_tid(self, q_tid):
         # response sends back same ID as query
@@ -91,3 +99,15 @@ class Response:
         r_flags = r_byte1 + r_byte2
 
         self.flags = r_flags
+
+    def build_qdcount(self, q_qdcount):
+        pass
+
+    def build_ancount(self, q_ancount):
+        pass
+
+    def build_nscount(self, q_nscount):
+        pass
+
+    def build_arcount(self, q_arcount):
+        pass
