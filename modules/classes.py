@@ -30,39 +30,64 @@ class ResponseData:
         self.flags = data[2:4]
 
 
+def encode_bytes(*bytes_raw):
+    byte_string = ''.join(bytes_raw)
+    return int(byte_string, 2).to_bytes(1, byteorder='big')
+
+
 class Response:
 
     def __init__(self):
         self.tid = ''
-        self.qr = ''
-        self.opcode = ''
-        self.aa = ''
+        self.flags = ''
 
     def __str__(self):
-        return f'tid: {self.tid}, qr: {self.qr}, opcode: {self.opcode}, aa: {self.aa}'
+        return f'tid: {self.tid}, flags: {self.flags}'
 
-    def build_tid(self, tid_raw):
-        # the transaction ID is interpreted by Python in an unusable way
-        # trim the initial 0x off the start of each byte and return string
-        tid = ''
-        for byte in tid_raw:
-            tid += hex(byte)[2:]
+    def build_tid(self, q_tid):
+        # response sends back same ID as query
+        self.tid = q_tid.hex()
 
-        self.tid = tid
+    def build_flags(self, q_flags):
+        q_byte1 = bytes(q_flags[:1])
+        # not currently using byte 2 of flags, so comment out for now
+        # q_byte2 = bytes(q_flags[1:2])
 
-    def build_flags(self, flags_raw):
-        byte1 = bytes(flags_raw[:1])
-        byte2 = bytes(flags_raw[1:2])
-
-        self.qr = ord(byte1) & (1 << 0)
+        # sending response, so value is 1
+        qr = '1'
 
         opcode = ''
+
+        # below suggested by HowCode, but does not operate on correct bytes
         # for bit in range(1, 5):
         #     opcode += str(ord(byte1) & (1 << bit))
 
+        # below operates on bits 1~4
         for bit in range(6, 2, -1):
-            opcode += '1' if ord(byte1) & (1 << bit) > 1 else '0'
+            opcode += '1' if ord(q_byte1) & (1 << bit) > 1 else '0'
 
-        self.opcode = opcode
+        # assume that server is giving authoritative answer
+        # this could be expanded later to check authoritativeness
+        aa = '1'
 
-        # self.aa = byte1[5]
+        # assume that response is short and therefore not truncated
+        tc = '0'
+
+        # was to 0 in HowCode, but it should be set by query
+        rd = str(ord(q_byte1) & (1 << 0))
+
+        # recursion is not available
+        ra = '0'
+
+        # must be 0
+        z = '000'
+
+        # assume there are no errors and return 0
+        # this could be expanded later to check and return errors
+        rcode = '0000'
+
+        r_byte1 = encode_bytes(qr, opcode, aa, tc, rd)
+        r_byte2 = encode_bytes(ra + z + rcode)
+        r_flags = r_byte1 + r_byte2
+
+        self.flags = r_flags
