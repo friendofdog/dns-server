@@ -22,15 +22,15 @@ class Query:
         self.data, self.addr = server.sock.recvfrom(512)
 
 
-class ResponseData:
+class QueryHeader:
 
-    def __init__(self, data):
-        self.tid = data[:2]
-        self.flags = data[2:4]
-        self.qdcount = data[4:6]
-        self.ancount = data[6:8]
-        self.nscount = data[8:10]
-        self.arcount = data[10:12]
+    def __init__(self, header):
+        self.tid = header[:2]
+        self.flags = header[2:4]
+        self.qdcount = header[4:6]
+        self.ancount = header[6:8]
+        self.nscount = header[8:10]
+        self.arcount = header[10:12]
 
 
 def encode_bytes(*bytes_raw):
@@ -40,6 +40,7 @@ def encode_bytes(*bytes_raw):
 
 def encode_int(bytes_raw):
     return int.from_bytes(bytes_raw, byteorder='big')
+
 
 class Response:
 
