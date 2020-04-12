@@ -13,6 +13,16 @@ query_header = QueryHeader(header)
 response = Response()
 
 
+def test_query_header():
+    assert type(header) is bytes
+    assert query_header.tid == header[:2]
+    assert query_header.flags == header[2:4]
+    assert query_header.qdcount == header[4:6]
+    assert query_header.ancount == header[6:8]
+    assert query_header.nscount == header[8:10]
+    assert query_header.arcount == header[10:12]
+
+
 def test_build_transaction_id():
     q_tid = query_header[:2]
     response.build_tid(q_tid)
