@@ -1,4 +1,4 @@
-from modules.classes import Server, Query, QueryHeader, Response
+from modules.classes import Server, Query, QueryHeader, QueryBody, Response
 
 
 while True:
@@ -11,8 +11,10 @@ while True:
     query = Query(server)
 
     # split response into usable parts
-    # each part equal to two bytes in DNS header
+    # first 12 bytes for header, rest for body
     query_header = QueryHeader(query.data[:12])
+    query_body = QueryBody(query.data[12:])
+    print(query_body)
 
     # build response piece-by-piece
     response = Response()
