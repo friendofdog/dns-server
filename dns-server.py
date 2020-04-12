@@ -1,4 +1,4 @@
-from modules.classes import Server, Query, QueryHeader, Response
+from modules.classes import Server, Query, QueryHeader, QueryBody, Response
 
 
 while True:
@@ -11,8 +11,9 @@ while True:
     query = Query(server)
 
     # split response into usable parts
-    # each part equal to two bytes in DNS header
+    # first 12 bytes for header, rest for body
     query_header = QueryHeader(query.data[:12])
+    query_body = QueryBody(query.data[12:])
 
     # build response piece-by-piece
     response = Response()
@@ -22,7 +23,6 @@ while True:
     response.build_ancount(query_header.ancount)
     response.build_nscount(query_header.nscount)
     response.build_arcount(query_header.arcount)
-    # response.build_queries(response_data.body)
     print(response)
 
     # build a response and use sendto() to send response back to addr

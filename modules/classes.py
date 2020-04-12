@@ -33,6 +33,31 @@ class QueryHeader:
         self.arcount = header[10:12]
 
 
+class QueryBody:
+
+    def __init__(self, body):
+        domain = body.split(b'\x00')[0]
+        query_type = body.split(domain)[1][1:3]
+        class_type = body.split(domain)[1][3:5]
+
+        domain_parts = []
+
+        while len(domain) > 0:
+            length = domain[0]
+            part = domain[1:length + 1]
+            domain_parts.append(part.decode('utf-8'))
+            domain = domain.split(part)[1]
+
+        domain_string = '.'.join(domain_parts)
+
+        self.qname = domain_string
+        self.qtype = query_type
+        self.qclass = class_type
+
+    def __str__(self):
+        return f'qname: {self.qname}, qtype: {self.qtype}, qclass: {self.qclass}'
+
+
 def encode_bytes(*bytes_raw):
     byte_string = ''.join(bytes_raw)
     return int(byte_string, 2).to_bytes(1, byteorder='big')
@@ -40,6 +65,7 @@ def encode_bytes(*bytes_raw):
 
 def encode_int(bytes_raw):
     return int.from_bytes(bytes_raw, byteorder='big')
+
 
 class Response:
 
