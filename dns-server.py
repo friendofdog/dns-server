@@ -17,6 +17,7 @@ while True:
     # first 12 bytes for header, rest for body
     query_header = QueryHeader(query.data[:12])
     query_body = QueryBody(query.data[12:])
+    print(query_header)
     print(query_body)
 
     # build response piece-by-piece
