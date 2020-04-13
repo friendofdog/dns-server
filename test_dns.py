@@ -7,10 +7,12 @@ header = b'\x88\xd0\x01\x00\x00\x01\x00\x00\x00\x00\x00\x01'
 body = b'\x07howcode\x03org\x00\x00\x01\x00\x01\x00\x00)' \
         + b'\x10\x00\x00\x00\x00\x00\x00\x00'
 tid = '88d0'
-# qr: 0, op: 0000, aa: 0, tc: 0, rd: 1, ra: 0, z: 000, rcode: 0000
+flag_byte1 = ('1', '0000', '1', '0', '1')
+flag1 = b'\x85'
 flags = b'\x85\x00'
 qname = 'howcode.org.'
 qtype_bytes = b'\x00\x01'
+qclass_bytes = b'\x00\x01'
 
 zones = Zones()
 query_header = QueryHeader(header)
@@ -35,11 +37,11 @@ def test_query_header():
 
 def test_query_body():
     assert type(query_body.qtype) is bytes
-    assert query_body.qtype == b'\x00\x01'
+    assert query_body.qtype == qtype_bytes
     assert type(query_body.qclass) is bytes
-    assert query_body.qclass == b'\x00\x01'
+    assert query_body.qclass == qclass_bytes
     assert type(query_body.qname) is str
-    assert query_body.qname == 'howcode.org.'
+    assert query_body.qname == qname
 
 
 def test_build_transaction_id():
@@ -69,13 +71,13 @@ def test_build_ancount():
 
 
 def test_encode_single_byte():
-    encoded = encode_single_byte('01', '01')
+    encoded = encode_single_byte(*flag_byte1)
     assert len(encoded) == 1
     assert type(encoded) is bytes
-    assert encoded == b'\x05'
+    assert encoded == flag1
 
 
 def test_encode_int():
-    inted = encode_int(b'\x00\x01')
+    inted = encode_int(qtype_bytes)
     assert type(inted) is int
     assert inted == 1
