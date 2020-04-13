@@ -9,7 +9,8 @@ body = b'\x07howcode\x03org\x00\x00\x01\x00\x01\x00\x00)' \
 tid = '88d0'
 # qr: 0, op: 0000, aa: 0, tc: 0, rd: 1, ra: 0, z: 000, rcode: 0000
 flags = b'\x85\x00'
-domain = 'howcode.org'
+qname = 'howcode.org.'
+qtype_bytes = b'\x00\x01'
 
 zones = Zones()
 query_header = QueryHeader(header)
@@ -59,6 +60,12 @@ def test_build_qdcount():
     response.build_qdcount(query_header.qdcount)
     assert type(response.qdcount) is int
     assert response.qdcount == 1
+
+
+def test_build_ancount():
+    response.build_ancount(zones.zones, qname, qtype_bytes)
+    assert type(response.ancount) is int
+    assert response.ancount == 5
 
 
 def test_encode_single_byte():

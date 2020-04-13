@@ -150,8 +150,34 @@ class Response:
         # in practice, query count is always 1
         self.qdcount = encode_int(q_qdcount)
 
-    def build_ancount(self, q_ancount):
-        pass
+    def build_ancount(self, zones, qname, qtype_bytes):
+        qtypes = {
+            '1': 'A',  # a host address
+            '2': 'NS',  # an authoritative name server
+            '3': 'MD',  # a mail destination (Obsolete - use MX)
+            '4': 'MF',  # a mail forwarder (Obsolete - use MX)
+            '5': 'CNAME',  # the canonical name for an alias
+            '6': 'SOA',  # marks the start of a zone of authority
+            '7': 'MB',  # a mailbox domain name (EXPERIMENTAL)
+            '8': 'MG',  # a mail group member (EXPERIMENTAL)
+            '9': 'MR',  # a mail rename domain name (EXPERIMENTAL)
+            '10': 'NULL',  # a null RR (EXPERIMENTAL)
+            '11': 'WKS',  # a well known service description
+            '12': 'PTR',  # a domain name pointer
+            '13': 'HINFO',  # host information
+            '14': 'MINFO',  # mailbox or mail list information
+            '15': 'MX',  # mail exchange
+            '16': 'TXT',  # text strings
+        }
+
+        qtype_int = str(encode_int(qtype_bytes))
+        qtype = qtypes[qtype_int].lower()
+
+        try:
+            zone = zones[qname]
+            self.ancount = len(zone[qtype])
+        except KeyError as error:
+            raise KeyError(f'No zone file for the domain {error} be be found')
 
     def build_nscount(self, q_nscount):
         pass

@@ -24,7 +24,7 @@ while True:
     response.build_tid(query_header.tid)
     response.build_flags(query_header.flags)
     response.build_qdcount(query_header.qdcount)
-    response.build_ancount(query_header.ancount)
+    response.build_ancount(zones.zones, query_body.qname, query_body.qtype)
     response.build_nscount(query_header.nscount)
     response.build_arcount(query_header.arcount)
     print(response)
