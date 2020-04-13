@@ -75,7 +75,7 @@ class QueryBody:
         return '.'.join(qname_parts) + '.'
 
 
-def encode_bytes(*bytes_raw):
+def encode_single_byte(*bytes_raw):
     byte_string = ''.join(bytes_raw)
     return int(byte_string, 2).to_bytes(1, byteorder='big')
 
@@ -140,8 +140,8 @@ class Response:
         # this could be expanded later to check and return errors
         rcode = '0000'
 
-        r_byte1 = encode_bytes(qr, opcode, aa, tc, rd)
-        r_byte2 = encode_bytes(ra + z + rcode)
+        r_byte1 = encode_single_byte(qr, opcode, aa, tc, rd)
+        r_byte2 = encode_single_byte(ra, z, rcode)
         r_flags = r_byte1 + r_byte2
 
         self.flags = r_flags

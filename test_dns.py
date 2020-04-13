@@ -1,6 +1,6 @@
 # content of dns-server.py
 import pytest
-from modules.classes import Zones, QueryHeader, QueryBody, Response
+from modules.classes import Zones, QueryHeader, QueryBody, Response, encode_single_byte, encode_int
 
 # dig howcode.org @127.0.0.1 +noadflag
 header = b'\x88\xd0\x01\x00\x00\x01\x00\x00\x00\x00\x00\x01'
@@ -59,3 +59,16 @@ def test_build_qdcount():
     response.build_qdcount(query_header.qdcount)
     assert type(response.qdcount) is int
     assert response.qdcount == 1
+
+
+def test_encode_single_byte():
+    encoded = encode_single_byte('01', '01')
+    assert len(encoded) == 1
+    assert type(encoded) is bytes
+    assert encoded == b'\x05'
+
+
+def test_encode_int():
+    inted = encode_int(b'\x00\x01')
+    assert type(inted) is int
+    assert inted == 1
