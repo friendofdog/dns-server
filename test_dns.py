@@ -1,6 +1,6 @@
 # content of dns-server.py
 import pytest
-from modules.classes import Server, Query, QueryHeader, QueryBody, Response
+from modules.classes import Zones, QueryHeader, QueryBody, Response
 
 # dig howcode.org @127.0.0.1 +noadflag
 header = b'\x88\xd0\x01\x00\x00\x01\x00\x00\x00\x00\x00\x01'
@@ -11,9 +11,15 @@ tid = '88d0'
 flags = b'\x85\x00'
 domain = 'howcode.org'
 
+zones = Zones()
 query_header = QueryHeader(header)
 query_body = QueryBody(body)
 response = Response()
+
+
+def test_zones():
+    for zone in zones.zones:
+        assert type(zones.zones[zone]) is dict
 
 
 def test_query_header():
@@ -33,6 +39,7 @@ def test_query_body():
     assert query_body.qclass == b'\x00\x01'
     assert type(query_body.qname) is str
     assert query_body.qname == 'howcode.org'
+
 
 def test_build_transaction_id():
     q_tid = query_header[:2]

@@ -1,4 +1,22 @@
-import socket
+import socket, glob, json
+
+
+class Zones:
+
+    def __init__(self):
+        self.zones = self.get_zones()
+
+    def get_zones(self):
+        jsonzone = {}
+        zones = glob.glob('zones/*.zone')
+
+        for zone in zones:
+            with open(zone) as zonedata:
+                data = json.load(zonedata)
+                zonename = data['$origin']
+                jsonzone[zonename] = data
+
+        return jsonzone
 
 
 class Server:

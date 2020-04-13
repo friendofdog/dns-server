@@ -1,7 +1,10 @@
-from modules.classes import Server, Query, QueryHeader, QueryBody, Response
+from modules.classes import Zones, Server, Query, QueryHeader, QueryBody, Response
 
 
 while True:
+
+    # get zones included in /zones
+    zones = Zones()
 
     # start the server
     server = Server()
