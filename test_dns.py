@@ -38,27 +38,24 @@ def test_query_body():
     assert type(query_body.qclass) is bytes
     assert query_body.qclass == b'\x00\x01'
     assert type(query_body.qname) is str
-    assert query_body.qname == 'howcode.org'
+    assert query_body.qname == 'howcode.org.'
 
 
 def test_build_transaction_id():
-    q_tid = query_header[:2]
-    response.build_tid(q_tid)
+    response.build_tid(query_header.tid)
     assert type(response.tid) is str
     assert len(response.tid) == 4
     assert response.tid == tid
 
 
 def test_build_flags():
-    q_flags = query_header[2:4]
-    response.build_flags(q_flags)
+    response.build_flags(query_header.flags)
     assert type(response.flags) is bytes
     assert len(response.flags) == 2
     assert response.flags == flags
 
 
 def test_build_qdcount():
-    q_qdcount = query_header[4:6]
-    response.build_qdcount(q_qdcount)
+    response.build_qdcount(query_header.qdcount)
     assert type(response.qdcount) is int
     assert response.qdcount == 1

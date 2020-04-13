@@ -72,7 +72,7 @@ class QueryBody:
             qname_parts.append(part.decode('utf-8'))
             qname = qname.split(part)[1]
 
-        return '.'.join(qname_parts)
+        return '.'.join(qname_parts) + '.'
 
 
 def encode_bytes(*bytes_raw):
