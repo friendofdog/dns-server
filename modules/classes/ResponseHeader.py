@@ -1,80 +1,3 @@
-import socket, glob, json
-
-
-class Zones:
-
-    def __init__(self):
-        self.zones = self.get_zones()
-
-    def get_zones(self):
-        jsonzone = {}
-        zones = glob.glob('zones/*.zone')
-
-        for zone in zones:
-            with open(zone) as zonedata:
-                data = json.load(zonedata)
-                zonename = data['$origin']
-                jsonzone[zonename] = data
-
-        return jsonzone
-
-
-class Server:
-
-    def __init__(self):
-        self.port = 53
-        self.ip = '127.0.0.1'
-        # create a socket using IPV4 (AF_INET) over UDP (SOCK_DGRAM)
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    def start_server(self):
-        # bind only takes one param, so have to use tuple
-        self.sock.bind((self.ip, self.port))
-
-
-class Query:
-
-    def __init__(self, server):
-        # recvfrom() returns a tuple, allowing data and addr to be set together
-        # 512 is the buffer size, which is same as recommended limit for UDP
-        self.data, self.addr = server.sock.recvfrom(512)
-
-
-class QueryHeader:
-
-    def __init__(self, header):
-        self.tid = header[:2]
-        self.flags = header[2:4]
-        self.qdcount = header[4:6]
-        self.ancount = header[6:8]
-        self.nscount = header[8:10]
-        self.arcount = header[10:12]
-
-
-class QueryBody:
-
-    def __init__(self, body):
-        qname_bytes = body.split(b'\x00')[0]
-
-        self.qtype = body.split(qname_bytes)[1][1:3]
-        self.qclass = body.split(qname_bytes)[1][3:5]
-        self.qname = self.parse_body(qname_bytes)
-
-    def __str__(self):
-        return f'qname: {self.qname}, qtype: {self.qtype}, qclass: {self.qclass}'
-
-    def parse_body(self, qname):
-        qname_parts = []
-
-        while len(qname) > 0:
-            length = qname[0]
-            part = qname[1:length + 1]
-            qname_parts.append(part.decode('utf-8'))
-            qname = qname.split(part)[1]
-
-        return '.'.join(qname_parts) + '.'
-
-
 def encode_single_byte(*bytes_raw):
     byte_string = ''.join(bytes_raw)
     return int(byte_string, 2).to_bytes(1, byteorder='big')
@@ -84,7 +7,7 @@ def encode_int(bytes_raw):
     return int.from_bytes(bytes_raw, byteorder='big')
 
 
-class Response:
+class ResponseHeader:
 
     def __init__(self):
         self.tid = ''

@@ -1,6 +1,7 @@
 # content of dns-server.py
 import pytest
-from modules.classes import Zones, QueryHeader, QueryBody, Response, encode_single_byte, encode_int
+from modules.classes import Zones, QueryHeader, QueryBody, ResponseHeader
+from modules.classes.ResponseHeader import encode_single_byte, encode_int
 
 # dig howcode.org @127.0.0.1 +noadflag
 header = b'\x88\xd0\x01\x00\x00\x01\x00\x00\x00\x00\x00\x01'
@@ -17,7 +18,7 @@ qclass_bytes = b'\x00\x01'
 zones = Zones()
 query_header = QueryHeader(header)
 query_body = QueryBody(body)
-response = Response()
+response = ResponseHeader()
 
 
 def test_zones():

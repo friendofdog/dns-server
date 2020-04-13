@@ -1,4 +1,4 @@
-from modules.classes import Zones, Server, Query, QueryHeader, QueryBody, Response
+from modules.classes import *
 
 
 while True:
@@ -20,7 +20,7 @@ while True:
     print(query_body)
 
     # build response piece-by-piece
-    response = Response()
+    response = ResponseHeader()
     response.build_tid(query_header.tid)
     response.build_flags(query_header.flags)
     response.build_qdcount(query_header.qdcount)
