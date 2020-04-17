@@ -1,7 +1,7 @@
 # content of dns-server.py
 import pytest
 from dns import *
-from dns.ResponseHeader import encode_single_byte, encode_int
+from dns.responseheader import encode_single_byte, encode_int
 
 # dig howcode.org @127.0.0.1 +noadflag
 header = b'\x88\xd0\x01\x00\x00\x01\x00\x00\x00\x00\x00\x01'

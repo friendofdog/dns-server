@@ -1,4 +1,4 @@
-from .Zones import Zones
-from .Server import Server
-from .Query import Query, QueryHeader, QueryBody
-from .ResponseHeader import ResponseHeader
+from .zones import Zones
+from .server import Server
+from .query import Query, QueryHeader, QueryBody
+from .responseheader import ResponseHeader
