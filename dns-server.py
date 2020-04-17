@@ -1,4 +1,4 @@
-from modules.classes import *
+from dns import *
 
 
 while True:

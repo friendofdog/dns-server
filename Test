@@ -5,5 +5,5 @@ basedir=$(cd "$(dirname "$0")" && pwd -P)
 
 cd "$basedir"
 . ./activate
-pytest -q
+pytest -q "$@"
 echo OK
