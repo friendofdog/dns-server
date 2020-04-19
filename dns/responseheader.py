@@ -9,13 +9,14 @@ def encode_int(bytes_raw):
 
 class ResponseHeader:
 
-    def __init__(self):
-        self.tid = ''
-        self.flags = ''
-        self.qdcount = ''
-        self.ancount = ''
-        self.nscount = ''
-        self.arcount = ''
+    def __init__(self, queryheader):
+        self.queryheader = queryheader
+        self.build_tid(queryheader[:2])
+        self.build_flags(queryheader[2:4])
+        self.build_qdcount(queryheader[4:6])
+        self.build_ancount(zones.zones, query_body.qname, query_body.qtype)
+        self.build_nscount(query_header.nscount)
+        self.build_arcount(query_header.arcount)
 
     def __str__(self):
         return f'tid: {self.tid}, flags: {self.flags}, qdcount: {self.qdcount}, ' \

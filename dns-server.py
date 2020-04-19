@@ -1,5 +1,8 @@
+import sys
 from dns import *
 
+if len(sys.argv) != 2:
+    raise RuntimeError('XXX write code to handle command line arguments')
 
 while True:
 
@@ -20,8 +23,10 @@ while True:
     print(query_header)
     print(query_body)
 
-    # build response piece-by-piece
-    response = ResponseHeader()
+    response = ResponseHeader(query_header)
+    print(response)
+
+
     response.build_tid(query_header.tid)
     response.build_flags(query_header.flags)
     response.build_qdcount(query_header.qdcount)
@@ -32,3 +37,4 @@ while True:
 
     # build a response and use sendto() to send response back to addr
     # server.sock.sendto(response, query.addr)
+

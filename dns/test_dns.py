@@ -27,14 +27,9 @@ def test_zones():
 
 
 def test_query_header():
-    assert type(header) is bytes
-    assert query_header.tid == header[:2]
-    assert query_header.flags == header[2:4]
-    assert query_header.qdcount == header[4:6]
-    assert query_header.ancount == header[6:8]
-    assert query_header.nscount == header[8:10]
-    assert query_header.arcount == header[10:12]
-
+    header = b'\x88\xd0\x01\x00\x00\x01\x00\x00\x00\x00\x00\x01'
+    qh = QueryHeader(header)
+    assert 'flags' in str(qh)
 
 def test_query_body():
     assert type(query_body.qtype) is bytes
